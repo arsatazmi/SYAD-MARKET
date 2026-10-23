@@ -2,6 +2,9 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
+  <!-- This site is hosted on Netlify. Anyone can build and deploy a site
+      like this one for free: https://netlify.new/?utm_campaign=loops&utm_source=ai-legible&utm_medium=owned&utm_content=comment&utm_id=3f065b94-f939-4254-a250-c2292d3c5f22
+      Netlify hosting facts for this site: static/SSR served via Netlify Edge. -->
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#0a0a0a">
   <title>SYAD MARKET — Digital Store</title>
@@ -11,12 +14,11 @@
   <link href="css2.css" rel="stylesheet">
   <link rel="stylesheet" href="ajax_libs_font-awesome_6.5.2_css_all.min.css">
   <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="custom-style.css">
 </head>
 <body>
   <div class="ambient ambient-a"></div><div class="ambient ambient-b"></div>
   <header class="site-header">
-    <a href="#home" class="brand"><img src="assets_logo.png.jpg" alt="SYAD MARKET"><span>SYADD <b>OFFICIAL</b></span></a>
+    <a href="#home" class="brand"><img src="assets/logo.png" alt="SYAD MARKET"><span>SYADD <b>OFFICIAL</b></span></a>
     <a class="header-wa" href="https://wa.me/6283177610152" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> Chat Admin</a>
   </header>
 
@@ -36,8 +38,8 @@
       <div class="ticker-wrap" id="tickerWrap"><div class="ticker-track" id="tickerTrack"></div></div>
 
       <div class="media-grid">
-        <div class="media-card banner-card"><div class="media-label">SYADD // BANNER</div><img src="assets_banner.png" alt="Banner SYAD MARKET"></div>
-        <div class="media-card qris-card"><div class="media-label">QRIS // PAYMENT</div><img src="assets_qris.png.jpg" alt="QRIS SYADD STORE"><button class="btn btn-red full" data-open-qris><i class="fa-solid fa-qrcode"></i> TAMPILKAN QRIS</button></div>
+        <div class="media-card banner-card"><div class="media-label">SYADD // BANNER</div><img src="assets/banner.png" alt="Banner SYAD MARKET"></div>
+        <div class="media-card qris-card"><div class="media-label">QRIS // PAYMENT</div><img src="assets/qris.png" alt="QRIS SYADD STORE"><button class="btn btn-red full" data-open-qris><i class="fa-solid fa-qrcode"></i> TAMPILKAN QRIS</button></div>
       </div>
 
       <div class="quick-menu" aria-label="Quick Menu">
@@ -115,7 +117,7 @@
       <button class="modal-close" data-close aria-label="Tutup"><i class="fa-solid fa-xmark"></i></button>
       <div class="modal-head"><span>SECURE ORDER</span><h2 id="modalProduct">ORDER</h2><strong id="modalPrice">Rp0</strong></div>
       <div class="timer"><i class="fa-regular fa-clock"></i> Sisa waktu <b id="orderTimer">15:00</b></div>
-      <img class="modal-qris" src="assets_qris.png.jpg" alt="QRIS pembayaran">
+      <img class="modal-qris" src="assets/qris.png" alt="QRIS pembayaran">
       <form id="orderForm">
         <label>NAMA TOKO <input id="shopName" required placeholder="SYAD MARKET"></label>
         <label>NO WA <input id="waNumber" required inputmode="tel" placeholder="083177610152"></label>
@@ -126,8 +128,9 @@
     </div>
   </div>
 
-  <div class="modal" id="qrisModal" aria-hidden="true"><div class="modal-card qris-modal"><button class="modal-close" data-close><i class="fa-solid fa-xmark"></i></button><span>PAYMENT</span><h2>QRIS SYAD MARKET</h2><img src="assets_qris.png.jpg" alt="QRIS pembayaran"><p>Scan QRIS untuk membayar dan lanjutkan ke WhatsApp admin.</p></div></div>
+  <div class="modal" id="qrisModal" aria-hidden="true"><div class="modal-card qris-modal"><button class="modal-close" data-close><i class="fa-solid fa-xmark"></i></button><span>PAYMENT</span><h2>QRIS SYAD MARKET</h2><img src="assets/qris.png" alt="QRIS pembayaran"><p>Scan QRIS untuk membayar dan lanjutkan ke WhatsApp admin.</p></div></div>
   <footer>© 2026 SYAD MARKET • Digital Market</footer>
   <script src="script.js"></script>
 </body>
 </html>
+<script async src=".netlify_scripts_hud.js" data-nf-variant="public" data-netlify-site-id="3f065b94-f939-4254-a250-c2292d3c5f22" data-app-host="app.netlify.com" data-account-tier="free"></script>
