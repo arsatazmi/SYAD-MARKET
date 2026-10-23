@@ -1,0 +1,306 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Role {
+  MEMBER
+  ADMIN
+}
+
+enum ProductKind {
+  STANDARD
+  SMM
+}
+
+enum FulfillmentMode {
+  MANUAL
+  API
+}
+
+enum OrderStatus {
+  PENDING_QUOTE
+  PENDING_PAYMENT
+  PENDING_REVIEW
+  PROCESSING
+  PARTIAL
+  COMPLETED
+  CANCELLED
+  REJECTED
+  REFUNDED
+}
+
+enum PaymentMethod {
+  QRIS
+  BALANCE
+}
+
+enum PaymentStatus {
+  UNPAID
+  PENDING_REVIEW
+  PAID
+  REFUNDED
+}
+
+enum WalletRequestType {
+  TOPUP
+  REFUND
+}
+
+enum WalletRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum WalletTransactionType {
+  TOPUP
+  ORDER_PAYMENT
+  REFUND
+  REFUND_HOLD
+  REFUND_REJECTED
+  ADJUSTMENT
+}
+
+enum ClaimStatus {
+  OPEN
+  IN_REVIEW
+  APPROVED
+  REJECTED
+  RESOLVED
+}
+
+model User {
+  id                  String              @id @default(cuid())
+  username            String              @unique
+  email               String?             @unique
+  passwordHash        String
+  name                String
+  whatsapp            String?
+  role                Role                @default(MEMBER)
+  balance             Int                 @default(0)
+  active              Boolean             @default(true)
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+  orders              Order[]
+  walletTransactions  WalletTransaction[]
+  walletRequests      WalletRequest[]
+  notifications       Notification[]
+  warrantyClaims      WarrantyClaim[]
+  reviews             Review[]
+  auditLogs           AuditLog[]          @relation("AdminAudits")
+
+  @@index([role, active])
+}
+
+model Category {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String    @unique
+  description String
+  icon        String    @default("package")
+  sortOrder   Int       @default(0)
+  active      Boolean   @default(true)
+  products    Product[]
+
+  @@index([active, sortOrder])
+}
+
+model Product {
+  id               String          @id @default(cuid())
+  categoryId       String
+  category         Category        @relation(fields: [categoryId], references: [id])
+  name             String
+  slug             String          @unique
+  description      String
+  kind             ProductKind     @default(STANDARD)
+  price            Int             @default(0)
+  priceLabel       String
+  unit             String          @default("order")
+  minQuantity      Int             @default(1)
+  maxQuantity      Int             @default(1)
+  stock            Int?
+  requiresQuote    Boolean         @default(false)
+  active           Boolean         @default(true)
+  featured         Boolean         @default(false)
+  fulfillmentMode  FulfillmentMode @default(MANUAL)
+  providerName     String?
+  providerServiceId String?
+  instructions     String?
+  estimate         String?
+  guarantee        String?
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  orders           Order[]
+
+  @@index([categoryId, active])
+  @@index([kind, active])
+}
+
+model Order {
+  id             String        @id @default(cuid())
+  code           String        @unique
+  userId         String
+  user           User          @relation(fields: [userId], references: [id])
+  productId      String?
+  product        Product?      @relation(fields: [productId], references: [id], onDelete: SetNull)
+  productName    String
+  categoryName   String
+  packageDetails String?
+  target         String?
+  quantity       Int           @default(1)
+  unitPrice      Int           @default(0)
+  total          Int           @default(0)
+  paymentMethod  PaymentMethod?
+  paymentStatus  PaymentStatus @default(UNPAID)
+  status         OrderStatus   @default(PENDING_PAYMENT)
+  customerName   String
+  whatsapp       String
+  notes          String?
+  resultData     String?       @db.Text
+  adminNote      String?       @db.Text
+  paidAt         DateTime?
+  completedAt    DateTime?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  warrantyClaims WarrantyClaim[]
+  review         Review?
+
+  @@index([userId, createdAt])
+  @@index([status, createdAt])
+  @@index([paymentStatus])
+}
+
+model WalletTransaction {
+  id           String                @id @default(cuid())
+  code         String                @unique
+  userId       String
+  user         User                  @relation(fields: [userId], references: [id])
+  type         WalletTransactionType
+  amount       Int
+  balanceAfter Int
+  description  String
+  reference    String?
+  createdAt    DateTime              @default(now())
+
+  @@index([userId, createdAt])
+}
+
+model WalletRequest {
+  id         String              @id @default(cuid())
+  code       String              @unique
+  userId     String
+  user       User                @relation(fields: [userId], references: [id])
+  type       WalletRequestType
+  amount     Int
+  status     WalletRequestStatus @default(PENDING)
+  whatsapp   String
+  note       String?
+  adminNote  String?
+  reviewedAt DateTime?
+  createdAt  DateTime            @default(now())
+  updatedAt  DateTime            @updatedAt
+
+  @@index([userId, createdAt])
+  @@index([status, type])
+}
+
+model StoreSetting {
+  id           Int      @id @default(1)
+  storeName    String   @default("SYAD MARKET")
+  tagline      String   @default("Market digital terpercaya")
+  whatsapp     String   @default("6283177610152")
+  qrisPath     String   @default("/assets/qris.jpg")
+  logoPath     String   @default("/assets/logo.jpg")
+  announcement String   @default("Semua pesanan dan pembayaran diverifikasi manual oleh admin.")
+  updatedAt    DateTime @updatedAt
+}
+
+model Banner {
+  id        String  @id @default(cuid())
+  title     String
+  subtitle  String?
+  imagePath String
+  active    Boolean @default(true)
+  sortOrder Int     @default(0)
+}
+
+model Announcement {
+  id        String   @id @default(cuid())
+  title     String
+  message   String   @db.Text
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  title     String
+  message   String   @db.Text
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId, isRead, createdAt])
+}
+
+model WarrantyClaim {
+  id            String      @id @default(cuid())
+  code          String      @unique
+  userId        String
+  user          User        @relation(fields: [userId], references: [id])
+  orderId       String
+  order         Order       @relation(fields: [orderId], references: [id])
+  description   String      @db.Text
+  status        ClaimStatus @default(OPEN)
+  adminResponse String?     @db.Text
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@index([userId, createdAt])
+  @@index([status])
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  orderId   String?  @unique
+  order     Order?   @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  rating    Int
+  comment   String   @db.Text
+  approved  Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([approved, createdAt])
+}
+
+model Provider {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  baseUrl   String?
+  apiKeyEnv String?
+  enabled   Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  actorId   String?
+  actor     User?    @relation("AdminAudits", fields: [actorId], references: [id], onDelete: SetNull)
+  action    String
+  entity    String
+  entityId  String?
+  detail    String?  @db.Text
+  createdAt DateTime @default(now())
+
+  @@index([actorId, createdAt])
+  @@index([entity, entityId])
+}
