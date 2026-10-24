@@ -133,7 +133,7 @@ async function main() {
       id: 1,
       storeName: 'SYAD MARKET',
       tagline: 'Market digital terpercaya • verifikasi manual oleh admin',
-      whatsapp: '6283177610152',
+      whatsapp: '6285150335567',
       qrisPath: '/assets/qris.jpg',
       logoPath: '/assets/logo.jpg',
       announcement: 'Semua pembayaran dan pesanan diproses manual. Konfirmasi QRIS melalui WhatsApp admin.',

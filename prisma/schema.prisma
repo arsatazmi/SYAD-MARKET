@@ -214,7 +214,7 @@ model StoreSetting {
   id           Int      @id @default(1)
   storeName    String   @default("SYAD MARKET")
   tagline      String   @default("Market digital terpercaya")
-  whatsapp     String   @default("6283177610152")
+  whatsapp     String   @default("6285150335567")
   qrisPath     String   @default("/assets/qris.jpg")
   logoPath     String   @default("/assets/logo.jpg")
   announcement String   @default("Semua pesanan dan pembayaran diverifikasi manual oleh admin.")
